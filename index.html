@@ -12,7 +12,9 @@
 
 <body>
     <script>
-        var url = "wss://" + window.location.host + "/ws-pingpong-latency";
+        var isLocal = window.location.host.includes("localhost");
+        var protocol = isLocal ? "ws://" : "wss://";
+        var url = protocol + window.location.host + "/ws-pingpong-latency";
         var ws = new WebSocket(url);
         var myid = -1;
 

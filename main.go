@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -20,6 +21,9 @@ type UserSession struct {
 
 func main() {
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
 	router := gin.Default()
 	mrouter := melody.New()
 	mrouter.Config = &melody.Config{
@@ -63,7 +67,7 @@ func main() {
 	})
 
 	mrouter.HandleMessage(func(s *melody.Session, msg []byte) {
-		userTime, err := strconv.ParseInt(string(msg), 10, 64)
+		userTime, err := strconv.ParseInt(strings.Split(string(msg), ".")[0], 10, 64)
 		if err != nil {
 			panic(err)
 		}
