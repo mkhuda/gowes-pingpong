@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Ping pong latency</title>
+    <style>
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var url = "ws://" + window.location.host + "/ws";
+        var ws = new WebSocket(url);
+        var myid = -1;
+
+        ws.onmessage = function (msg) {
+            if (msg.data) {
+                var isPing = msg.data == "9";
+                var isUID = msg.data.includes("sessionID:");
+                var isLatency = msg.data.includes("latency:");
+                if (isPing) {
+                    var timeStampInMs =
+                        window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ?
+                            window.performance.now() + window.performance.timing.navigationStart :
+                            Date.now();
+                    ws.send(timeStampInMs);
+                }
+                if (isUID) {
+                    document.getElementById("info").innerHTML = msg.data;
+                }
+                if (isLatency) {
+                    document.getElementById("content").innerHTML = msg.data;
+                }
+            }
+        };
+    </script>
+    <div id="info"></div>
+    <div id="content">Waiting latency server</div>
+</body>
+
+</html>
