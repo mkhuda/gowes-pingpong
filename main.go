@@ -29,6 +29,7 @@ func main() {
 		MaxMessageSize:    mrouter.Config.MaxMessageSize,
 		MessageBufferSize: mrouter.Upgrader.ReadBufferSize,
 	}
+	mrouter.Upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	userSession := make(map[*melody.Session]*UserSession)
 	lock := new(sync.Mutex)
 	counter := 0
