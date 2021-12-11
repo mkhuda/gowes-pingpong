@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -18,6 +19,7 @@ type UserSession struct {
 }
 
 func main() {
+	port := os.Getenv("PORT")
 	router := gin.Default()
 	mrouter := melody.New()
 	mrouter.Config = &melody.Config{
@@ -67,5 +69,5 @@ func main() {
 		s.Write([]byte("latency: " + fmt.Sprint(serverTime-userTime)))
 	})
 
-	router.Run(":5000")
+	router.Run(":" + port)
 }
