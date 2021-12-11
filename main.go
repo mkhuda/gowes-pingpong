@@ -43,9 +43,7 @@ func main() {
 	})
 
 	mrouter.HandlePong(func(s *melody.Session) {
-		lock.Lock()
 		s.Write([]byte(fmt.Sprint(websocket.PingMessage)))
-		lock.Unlock()
 	})
 
 	mrouter.HandleConnect(func(s *melody.Session) {
