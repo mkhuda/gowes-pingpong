@@ -43,7 +43,9 @@ func main() {
 	})
 
 	mrouter.HandlePong(func(s *melody.Session) {
+		lock.Lock()
 		s.Write([]byte(fmt.Sprint(websocket.PingMessage)))
+		lock.Unlock()
 	})
 
 	mrouter.HandleConnect(func(s *melody.Session) {
@@ -62,12 +64,14 @@ func main() {
 	})
 
 	mrouter.HandleMessage(func(s *melody.Session, msg []byte) {
+		lock.Lock()
 		userTime, err := strconv.ParseInt(string(msg), 10, 64)
 		if err != nil {
 			panic(err)
 		}
 		serverTime := time.Now().UnixNano() / int64(time.Millisecond)
 		s.Write([]byte("latency: " + fmt.Sprint(serverTime-userTime)))
+		lock.Unlock()
 	})
 
 	router.Run(":" + port)
